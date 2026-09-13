@@ -2,12 +2,17 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   devIndicators: false,
-  // Demo previews are served through a proxy host, so the action CSRF check
-  // needs it allow-listed alongside localhost.
+  // Demo previews are served through a proxy that forwards its own hostname as
+  // `x-forwarded-host` but rewrites `Origin` to `localhost`, so both sides of
+  // the server-action CSRF comparison have to be allow-listed.
   allowedDevOrigins: ["*.preview.devinapps.com"],
   experimental: {
     serverActions: {
-      allowedOrigins: ["localhost:3000", "*.preview.devinapps.com"],
+      allowedOrigins: [
+        "localhost",
+        "localhost:3000",
+        "*.preview.devinapps.com",
+      ],
     },
   },
 };
