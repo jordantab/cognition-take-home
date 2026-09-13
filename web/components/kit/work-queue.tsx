@@ -18,7 +18,6 @@ import { day, money } from "@/lib/format";
 
 import { EmptyState } from "./empty-state";
 import { PriorityBadge, StatusBadge, TagBadge } from "./status-badge";
-import { RiskScore } from "./risk-score";
 import { SlaClock } from "./sla-clock";
 import { UserChip } from "./user-chip";
 import { useQueueParams } from "./use-queue-params";
@@ -176,8 +175,6 @@ function Cell({
       return <StatusBadge status={row.status} states={states} />;
     case "priority":
       return <PriorityBadge priority={row.priority} />;
-    case "risk":
-      return <RiskScore score={row.risk_score} />;
     case "money":
       return (
         <span className="tabular-nums">{money(Number(raw ?? 0))}</span>

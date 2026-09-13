@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import { StatusBadge } from "@/components/kit/status-badge";
-import { RiskScore } from "@/components/kit/risk-score";
 import type { EvidenceProps } from "@/components/kit/evidence-tabs";
 import { day } from "@/lib/format";
 
@@ -28,7 +27,6 @@ export function RelatedCasesEvidence({ detail, states }: EvidenceProps) {
             <span className="min-w-0 flex-1 truncate text-sm">
               {related.title}
             </span>
-            <RiskScore score={related.risk_score} showBar={false} />
             <StatusBadge status={related.status} states={states} />
             <span className="text-xs text-muted-foreground">
               {day(related.opened_at)}

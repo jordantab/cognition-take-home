@@ -5,7 +5,6 @@ import type { CaseRow, State } from "@/lib/types";
 import { dateTime } from "@/lib/format";
 
 import { PriorityBadge, StatusBadge } from "./status-badge";
-import { RiskScore } from "./risk-score";
 import { SlaClock } from "./sla-clock";
 
 /** Two-column case workspace shared by every case type. */
@@ -51,9 +50,6 @@ export function CaseShell({
             overdue={caseRow.overdue}
             closed={Boolean(caseRow.closed_at)}
           />
-          <span className="flex items-center gap-1.5">
-            Risk <RiskScore score={caseRow.risk_score} />
-          </span>
         </div>
       </div>
 

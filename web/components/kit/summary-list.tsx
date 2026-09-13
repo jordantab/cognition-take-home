@@ -1,7 +1,6 @@
 import type { CaseRow, SummaryField } from "@/lib/types";
 import { money, titleCase } from "@/lib/format";
 
-import { RiskScore } from "./risk-score";
 import { TagBadge } from "./status-badge";
 
 const RISK_RATING_LABEL: Record<string, string> = {
@@ -53,8 +52,6 @@ function SummaryValue({
           label={String(caseRow.extra?.[`${field.key}_label`] ?? raw ?? "—")}
         />
       );
-    case "risk":
-      return <RiskScore score={Number(raw ?? 0)} />;
     case "risk_rating":
       return (
         <span>{RISK_RATING_LABEL[String(raw)] ?? titleCase(String(raw ?? "—"))}</span>

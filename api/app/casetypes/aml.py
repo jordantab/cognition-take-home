@@ -175,7 +175,6 @@ COLUMNS = (
     Column("subject_name", "Customer", type="text", sortable=True),
     Column("typology", "Typology", type="tag", width="12rem"),
     Column("amount", "Exposure", type="money", sortable=True, width="8rem"),
-    Column("risk_score", "Risk", type="risk", sortable=True, width="6rem"),
     Column("status", "Status", type="status", sortable=True, width="9rem"),
     Column("assignee", "Owner", type="user", width="9rem"),
     Column("due_at", "SLA", type="sla", sortable=True, width="7rem"),

@@ -107,12 +107,6 @@ export const BLOCKS: Block[] = [
     description: "Status, priority and tag badges with shared semantic tones.",
   },
   {
-    name: "RiskScore",
-    file: "components/kit/risk-score.tsx",
-    layer: "platform",
-    description: "0-100 score with threshold colouring.",
-  },
-  {
     name: "SlaClock",
     file: "components/kit/sla-clock.tsx",
     layer: "platform",

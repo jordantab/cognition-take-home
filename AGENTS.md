@@ -4,7 +4,7 @@ This is a case-management platform with one app on it (AML). The value of the re
 
 ## Before writing UI, check the kit
 
-`web/components/kit/` already has: `AppShell`, `PersonaSwitcher`, `PageHeader`, `WorkQueue`, `FilterBar`, `MetricTiles`, `TrendChart`, `BreakdownBars`, `CaseShell`, `SummaryList`, `EvidenceTabs`, `DecisionPanel`, `AuditTimeline`, `CommentThread`, `AssigneePicker`, `StatusBadge`/`PriorityBadge`/`TagBadge`, `RiskScore`, `SlaClock`, `UserChip`, `RoleGate`/`can`, `ExportCsvButton`, `EmptyState`, `FactGrid`, `useQueueParams`.
+`web/components/kit/` already has: `AppShell`, `PersonaSwitcher`, `PageHeader`, `WorkQueue`, `FilterBar`, `MetricTiles`, `TrendChart`, `BreakdownBars`, `CaseShell`, `SummaryList`, `EvidenceTabs`, `DecisionPanel`, `AuditTimeline`, `CommentThread`, `AssigneePicker`, `StatusBadge`/`PriorityBadge`/`TagBadge`, `SlaClock`, `UserChip`, `RoleGate`/`can`, `ExportCsvButton`, `EmptyState`, `FactGrid`, `useQueueParams`.
 
 Reuse or extend one of those before adding a component. Anything that would be useful to a second app belongs in `kit/` and must not import from `components/aml/` or reference AML concepts.
 
