@@ -26,6 +26,21 @@ export const TONE_DOT: Record<Tone, string> = {
   success: "bg-emerald-500",
 };
 
+/**
+ * Categorical palette for `tag` columns, whose values are dimensions (a
+ * typology, a document type, a refund reason) rather than good/bad signals.
+ * A case type maps its values onto these keys in its column declaration.
+ */
+export const TAG_PALETTE: Record<string, string> = {
+  slate: "border-slate-200 bg-slate-50 text-slate-700",
+  sky: "border-sky-200 bg-sky-50 text-sky-700",
+  violet: "border-violet-200 bg-violet-50 text-violet-700",
+  teal: "border-teal-200 bg-teal-50 text-teal-700",
+  amber: "border-amber-200 bg-amber-50 text-amber-800",
+  rose: "border-rose-200 bg-rose-50 text-rose-700",
+  indigo: "border-indigo-200 bg-indigo-50 text-indigo-700",
+};
+
 export function asTone(value: string | null | undefined): Tone {
   return value && value in TONE_BADGE ? (value as Tone) : "neutral";
 }

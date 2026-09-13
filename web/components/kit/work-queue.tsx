@@ -193,6 +193,7 @@ function Cell({
       return (
         <TagBadge
           label={String(row.extra?.[`${column.key}_label`] ?? raw ?? "—")}
+          color={column.tones?.[String(raw ?? "")]}
         />
       );
     case "date":

@@ -54,6 +54,7 @@ class ColumnOut(BaseModel):
     sortable: bool
     width: str | None
     primary: bool
+    tones: dict[str, str] = {}
 
 
 class FilterOptionOut(BaseModel):

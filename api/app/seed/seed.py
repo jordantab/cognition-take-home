@@ -115,6 +115,60 @@ COMMENT_BODIES = [
 ]
 
 
+def _usd(amount: float) -> str:
+    return f"${amount:,.0f}"
+
+
+def _headline(typology: str, flagged: list[Transaction], exposure: float) -> str:
+    """What the detection actually saw, so the queue summary adds information."""
+    count = len(flagged)
+    span_days = max(
+        1,
+        round(
+            (
+                max(t.posted_at for t in flagged) - min(t.posted_at for t in flagged)
+            ).total_seconds()
+            / 86_400
+        ),
+    )
+    if typology == "structuring":
+        return (
+            f"{count} cash deposits under $10k totalling {_usd(exposure)} "
+            f"over {span_days} days"
+        )
+    if typology == "rapid_movement":
+        inbound = next(t for t in flagged if t.direction == "credit")
+        outbound = [t for t in flagged if t.direction == "debit"]
+        hours = round(
+            (max(t.posted_at for t in outbound) - inbound.posted_at).total_seconds()
+            / 3600
+        )
+        return (
+            f"{_usd(inbound.amount)} inbound wire dispersed across "
+            f"{len(outbound)} transfers within {hours}h"
+        )
+    if typology == "high_risk_geo":
+        countries = sorted({t.counterparty_country for t in flagged})
+        return (
+            f"{count} cross-border wires totalling {_usd(exposure)} "
+            f"with {', '.join(countries)}"
+        )
+    if typology == "sanctions_nexus":
+        return (
+            f"{_usd(exposure)} wire to screened counterparty "
+            f"{flagged[0].counterparty_name}"
+        )
+    if typology == "unusual_for_profile":
+        return (
+            f"{count} inbound transfers totalling {_usd(exposure)}, "
+            "well above the 90-day average"
+        )
+    return (
+        f"{count} third-party ACH credits totalling {_usd(exposure)} "
+        "from unrelated senders"
+    )
+
+
 def _pick(rng: random.Random, weights: list[tuple[str, int]]) -> str:
     population = [value for value, _ in weights]
     weight_values = [weight for _, weight in weights]
@@ -467,7 +521,7 @@ def seed() -> None:
                 id=new_id("case"),
                 case_type="aml",
                 reference=f"AML-{2400 + index}",
-                title=f"{TYPOLOGIES[typology]} - {customer.name}",
+                title=_headline(typology, flagged, exposure),
                 status=status,
                 priority=priority,
                 risk_score=risk_score,

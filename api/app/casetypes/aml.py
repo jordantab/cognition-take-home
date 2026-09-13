@@ -77,6 +77,16 @@ CLOSE_REASONS = (
     ReasonCode("insufficient_evidence", "Insufficient evidence of suspicion"),
 )
 
+# Categorical colours for the typology tag, resolved by the shared kit palette.
+TYPOLOGY_TONES = (
+    ("structuring", "indigo"),
+    ("rapid_movement", "sky"),
+    ("high_risk_geo", "amber"),
+    ("sanctions_nexus", "rose"),
+    ("unusual_for_profile", "violet"),
+    ("third_party_funding", "teal"),
+)
+
 SAR_REASONS = tuple(ReasonCode(key, label) for key, label in TYPOLOGIES.items())
 
 TRANSITIONS = (
@@ -173,7 +183,13 @@ COLUMNS = (
     ),
     Column("title", "Summary", type="text"),
     Column("subject_name", "Customer", type="text", sortable=True),
-    Column("typology", "Typology", type="tag", width="12rem"),
+    Column(
+        "typology",
+        "Typology",
+        type="tag",
+        width="12rem",
+        tones=TYPOLOGY_TONES,
+    ),
     Column("amount", "Exposure", type="money", sortable=True, width="8rem"),
     Column("status", "Status", type="status", sortable=True, width="9rem"),
     Column("assignee", "Owner", type="user", width="9rem"),

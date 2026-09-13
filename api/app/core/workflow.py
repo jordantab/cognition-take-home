@@ -56,6 +56,8 @@ class Column:
     sortable: bool = False
     width: str | None = None
     primary: bool = False
+    # Optional value -> tone map so `tag` columns carry semantic colour.
+    tones: tuple[tuple[str, str], ...] = ()
 
 
 @dataclass(frozen=True)

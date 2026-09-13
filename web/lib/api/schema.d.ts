@@ -419,6 +419,13 @@ export interface components {
             width: string | null;
             /** Primary */
             primary: boolean;
+            /**
+             * Tones
+             * @default {}
+             */
+            tones: {
+                [key: string]: string;
+            };
         };
         /** CommentOut */
         CommentOut: {

@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import type { State } from "@/lib/types";
 import { titleCase } from "@/lib/format";
 
-import { TONE_BADGE, TONE_DOT, asTone } from "./tone";
+import { TAG_PALETTE, TONE_BADGE, TONE_DOT, asTone } from "./tone";
 
 /**
  * Renders any workflow state from the case type's declaration - the app never
@@ -46,9 +46,15 @@ export function PriorityBadge({ priority }: { priority: string }) {
   );
 }
 
-export function TagBadge({ label }: { label: string }) {
+export function TagBadge({ label, color }: { label: string; color?: string }) {
   return (
-    <Badge variant="outline" className="max-w-full truncate font-normal">
+    <Badge
+      variant="outline"
+      className={cn(
+        "max-w-full truncate font-normal",
+        color ? TAG_PALETTE[color] : undefined,
+      )}
+    >
       {label}
     </Badge>
   );
