@@ -279,6 +279,8 @@ export interface components {
             can_comment: boolean;
             /** Can Assign Others */
             can_assign_others: boolean;
+            /** Can Claim */
+            can_claim: boolean;
         };
         /** CaseEventOut */
         CaseEventOut: {

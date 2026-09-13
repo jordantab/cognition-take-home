@@ -93,9 +93,16 @@ export function DecisionPanel({
     : (active.requires_note && !note.trim()) ||
       (active.requires_reason_code && !reasonCode);
 
+  const readOnly = transitions.every((transition) => !transition.enabled);
+
   return (
     <>
       <div className="flex flex-col gap-2">
+        {readOnly ? (
+          <p className="text-sm text-muted-foreground">
+            Read-only for your role — you can still comment on the case.
+          </p>
+        ) : null}
         {transitions.map((transition) =>
           transition.enabled ? (
             <Button

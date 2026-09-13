@@ -40,22 +40,36 @@ export default async function QueuePage({
   });
 
   const page = Number(pick(query, "page") ?? 1);
-  const [currentUser, list, metrics] = await Promise.all([
-    getCurrentUser(),
-    getCases(caseType, {
-      status: pick(query, "status"),
-      assignee_id: pick(query, "assignee_id"),
-      priority: pick(query, "priority"),
-      typology: pick(query, "typology"),
-      q: pick(query, "q"),
-      open_only: pick(query, "open_only"),
-      sort: pick(query, "sort") ?? "due_at",
-      direction: pick(query, "direction") ?? "asc",
-      page,
-      page_size: PAGE_SIZE,
-    }),
+  const currentUser = await getCurrentUser();
+  // `me` keeps "my work" views pinned to whoever is signed in, not to an id
+  // captured when the view was clicked.
+  const assignee = pick(query, "assignee_id");
+  const filters = {
+    status: pick(query, "status"),
+    assignee_id: assignee === "me" ? currentUser.id : assignee,
+    priority: pick(query, "priority"),
+    typology: pick(query, "typology"),
+    q: pick(query, "q"),
+    open_only: pick(query, "open_only"),
+    sort: pick(query, "sort") ?? "due_at",
+    direction: pick(query, "direction") ?? "asc",
+  };
+
+  const [list, metrics] = await Promise.all([
+    getCases(caseType, { ...filters, page, page_size: PAGE_SIZE }),
     getMetrics(caseType),
   ]);
+
+  // Export every row matching the current filters, not just the page on screen.
+  async function exportRows() {
+    "use server";
+    const all = await getCases(caseType, {
+      ...filters,
+      page: 1,
+      page_size: 1000,
+    });
+    return all.items;
+  }
 
   return (
     <div className="flex flex-col">
@@ -65,8 +79,10 @@ export default async function QueuePage({
         actions={
           can(currentUser, "case:export") ? (
             <ExportCsvButton
-              rows={list.items}
               columns={config.columns}
+              states={config.states}
+              total={list.total}
+              fetchRows={exportRows}
               filename={`${config.key}-queue.csv`}
             />
           ) : null

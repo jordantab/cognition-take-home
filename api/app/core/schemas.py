@@ -226,6 +226,7 @@ class CaseDetailOut(BaseModel):
     available_transitions: list[AvailableTransitionOut]
     can_comment: bool
     can_assign_others: bool
+    can_claim: bool
 
 
 class TransitionRequest(BaseModel):

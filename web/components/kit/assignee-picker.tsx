@@ -15,23 +15,40 @@ import type { ActionResult } from "@/app/actions";
 
 const UNASSIGNED = "__unassigned__";
 
+/** Only offers the changes the current role is actually allowed to make. */
 export function AssigneePicker({
   users,
   value,
-  disabled,
+  assignableUserIds,
+  canUnassign,
+  lockReason,
   onAssign,
 }: {
   users: User[];
   value: string | null;
-  disabled?: boolean;
+  assignableUserIds: string[];
+  canUnassign: boolean;
+  lockReason: string;
   onAssign: (assigneeId: string | null) => Promise<ActionResult>;
 }) {
   const [pending, startTransition] = useTransition();
+  const options = users.filter((user) => assignableUserIds.includes(user.id));
+  const locked = options.length === 0;
+
+  if (locked) {
+    const owner = users.find((user) => user.id === value);
+    return (
+      <div className="space-y-1">
+        <p className="text-sm">{owner ? owner.name : "Unassigned"}</p>
+        <p className="text-xs text-muted-foreground">{lockReason}</p>
+      </div>
+    );
+  }
 
   return (
     <Select
       value={value ?? UNASSIGNED}
-      disabled={disabled || pending}
+      disabled={pending}
       onValueChange={(next) =>
         startTransition(async () => {
           const result = await onAssign(next === UNASSIGNED ? null : next);
@@ -44,8 +61,10 @@ export function AssigneePicker({
         <SelectValue placeholder="Unassigned" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value={UNASSIGNED}>Unassigned</SelectItem>
-        {users.map((user) => (
+        {canUnassign || value === null ? (
+          <SelectItem value={UNASSIGNED}>Unassigned</SelectItem>
+        ) : null}
+        {options.map((user) => (
           <SelectItem key={user.id} value={user.id}>
             {user.name} · {user.role_label}
           </SelectItem>

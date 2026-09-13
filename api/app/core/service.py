@@ -384,6 +384,7 @@ def get_case_detail(
         can_assign_others=has_permission(
             Role(current_user.role), Permission.CASE_ASSIGN_OTHERS
         ),
+        can_claim=has_permission(Role(current_user.role), Permission.CASE_CLAIM),
     )
 
 

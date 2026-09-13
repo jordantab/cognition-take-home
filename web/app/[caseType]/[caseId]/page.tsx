@@ -121,11 +121,15 @@ export default async function CaseDetailPage({
               <AssigneePicker
                 users={users}
                 value={detail.case.assignee?.id ?? null}
-                disabled={
-                  !detail.can_assign_others &&
-                  detail.case.assignee?.id !== currentUser.id &&
-                  detail.case.assignee != null
+                assignableUserIds={
+                  detail.can_assign_others
+                    ? users.map((user) => user.id)
+                    : detail.can_claim
+                      ? [currentUser.id]
+                      : []
                 }
+                canUnassign={detail.can_assign_others}
+                lockReason="Your role cannot change case ownership."
                 onAssign={assign}
               />
             </CardContent>

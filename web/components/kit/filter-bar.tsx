@@ -56,13 +56,21 @@ export function FilterBar({
     };
     for (const [key, value] of Object.entries(preset.filters)) next[key] = value;
     if (preset.mine) {
-      next.assignee_id = currentUserId;
+      // `me` rather than an id, so the view follows the persona switcher.
+      next.assignee_id = "me";
       next.open_only = "true";
     }
     setParams(next, { reset: true });
   }
 
-  const hasFilters = selects.some((filter) => params.get(filter.key));
+  const hasFilters =
+    selects.some((filter) => params.get(filter.key)) || params.get("q") !== null;
+
+  function selectValue(key: string): string {
+    const value = params.get(key);
+    if (!value) return ALL;
+    return key === "assignee_id" && value === "me" ? currentUserId : value;
+  }
 
   return (
     <div className="flex flex-col gap-3">
@@ -108,7 +116,7 @@ export function FilterBar({
         {selects.map((filter) => (
           <Select
             key={filter.key}
-            value={params.get(filter.key) ?? ALL}
+            value={selectValue(filter.key)}
             onValueChange={(value) =>
               setParams({ [filter.key]: value === ALL ? null : value })
             }
@@ -134,9 +142,7 @@ export function FilterBar({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() =>
-              setParams({ preset: activePreset }, { reset: true })
-            }
+            onClick={() => setParams({}, { reset: true })}
           >
             <X className="size-3.5" />
             Clear

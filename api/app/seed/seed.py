@@ -254,7 +254,10 @@ def seed() -> None:
         # ------------------------------------------------------------------
         # Alerts, each backed by a concrete transaction pattern
         # ------------------------------------------------------------------
-        alert_customers = rng.sample(customers, 64)
+        # A handful of customers get two alerts so the Related tab has content.
+        alert_customers = rng.sample(customers, 58)
+        alert_customers += rng.sample(alert_customers, 6)
+        rng.shuffle(alert_customers)
         cases: list[Case] = []
         events: list[CaseEvent] = []
         comments: list[Comment] = []
@@ -504,7 +507,8 @@ def seed() -> None:
             cursor = opened_at
             analyst = rng.choice(analysts)
             if status != "new":
-                cursor += timedelta(hours=rng.randint(1, 20))
+                # Clamped so a recent alert never gets future-dated history.
+                cursor = min(cursor + timedelta(hours=rng.randint(1, 20)), now)
                 case.assignee_id = analyst.id
                 events.append(
                     CaseEvent(
@@ -521,7 +525,7 @@ def seed() -> None:
                 )
 
             if status == "awaiting_info":
-                cursor += timedelta(hours=rng.randint(2, 26))
+                cursor = min(cursor + timedelta(hours=rng.randint(2, 26)), now)
                 events.append(
                     CaseEvent(
                         id=new_id("evt"),
@@ -537,7 +541,7 @@ def seed() -> None:
                     )
                 )
             elif status == "closed_no_action":
-                cursor += timedelta(hours=rng.randint(3, 40))
+                cursor = min(cursor + timedelta(hours=rng.randint(3, 40)), now)
                 reason = rng.choice(CLOSE_REASONS)
                 events.append(
                     CaseEvent(
@@ -556,7 +560,7 @@ def seed() -> None:
                 )
                 case.closed_at = cursor
             elif status in {"pending_approval", "sar_filed"}:
-                cursor += timedelta(hours=rng.randint(4, 36))
+                cursor = min(cursor + timedelta(hours=rng.randint(4, 36)), now)
                 events.append(
                     CaseEvent(
                         id=new_id("evt"),
@@ -574,7 +578,7 @@ def seed() -> None:
                 )
                 if status == "sar_filed":
                     manager = rng.choice(managers)
-                    cursor += timedelta(hours=rng.randint(2, 30))
+                    cursor = min(cursor + timedelta(hours=rng.randint(2, 30)), now)
                     events.append(
                         CaseEvent(
                             id=new_id("evt"),
@@ -595,7 +599,7 @@ def seed() -> None:
 
             for _ in range(rng.randint(0, 3)):
                 author = rng.choice(users[:4])
-                comment_at = opened_at + timedelta(hours=rng.randint(1, 60))
+                comment_at = min(opened_at + timedelta(hours=rng.randint(1, 60)), now)
                 comments.append(
                     Comment(
                         id=new_id("cmt"),
