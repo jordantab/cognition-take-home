@@ -25,7 +25,9 @@ export function AppShell({
 }) {
   return (
     <div className="flex min-h-full">
-      <aside className="hidden w-64 shrink-0 flex-col gap-4 border-r bg-muted/30 p-3 md:flex">
+      {/* Pinned to the viewport so identity and navigation stay reachable
+          however long the queue below gets. */}
+      <aside className="sticky top-0 hidden h-svh w-64 shrink-0 flex-col gap-4 overflow-y-auto border-r bg-muted/30 p-3 md:flex">
         <Link href="/" className="flex items-center gap-2 px-2 pt-1">
           <span className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <Blocks className="size-4" />
