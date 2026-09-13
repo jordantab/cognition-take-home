@@ -83,8 +83,8 @@ TYPOLOGY_TONES = (
     ("rapid_movement", "sky"),
     ("high_risk_geo", "amber"),
     ("sanctions_nexus", "rose"),
-    ("unusual_for_profile", "violet"),
-    ("third_party_funding", "teal"),
+    ("unusual_for_profile", "teal"),
+    ("third_party_funding", "slate"),
 )
 
 SAR_REASONS = tuple(ReasonCode(key, label) for key, label in TYPOLOGIES.items())

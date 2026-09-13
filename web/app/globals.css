@@ -4,6 +4,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* The categorical tag palette is picked per case type at runtime, so keep the
+   whole palette in the build rather than only the hues in the current app. */
+@source inline("{,dark:}bg-{slate,sky,violet,teal,amber,rose,indigo}-{50,100,400,500,800,900,950}");
+@source inline("{,dark:}text-{slate,sky,violet,teal,amber,rose,indigo}-{200,700,800,900}");
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
