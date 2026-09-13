@@ -41,15 +41,17 @@ def _config(case_type: str):
 
 
 @router.get("/case-types", response_model=list[CaseTypeOut])
-def read_case_types(session: DbSession) -> list[CaseTypeOut]:
+def read_case_types(session: DbSession, current_user: CurrentUser) -> list[CaseTypeOut]:
     users = list(session.exec(select(User)).all())
-    return [case_type_out(c, users) for c in all_case_types()]
+    return [case_type_out(c, users, current_user) for c in all_case_types()]
 
 
 @router.get("/case-types/{case_type}", response_model=CaseTypeOut)
-def read_case_type(case_type: str, session: DbSession) -> CaseTypeOut:
+def read_case_type(
+    case_type: str, session: DbSession, current_user: CurrentUser
+) -> CaseTypeOut:
     users = list(session.exec(select(User)).all())
-    return case_type_out(_config(case_type), users)
+    return case_type_out(_config(case_type), users, current_user)
 
 
 @router.get("/case-types/{case_type}/cases", response_model=CaseListOut)

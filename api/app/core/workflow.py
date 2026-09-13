@@ -100,6 +100,9 @@ class QueuePreset:
     # Roles that open on this view instead of the default one, so an approver
     # does not land on an empty personal queue.
     default_for_roles: tuple[str, ...] = ()
+    # Hides the view from personas who could never populate it, e.g. an
+    # approval queue for someone who cannot approve.
+    requires_permission: Permission | None = None
 
 
 @dataclass(frozen=True)

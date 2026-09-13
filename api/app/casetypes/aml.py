@@ -244,6 +244,7 @@ PRESETS = (
         "Awaiting my approval",
         filters={"status": "pending_approval"},
         default_for_roles=("compliance_manager",),
+        requires_permission=Permission.CASE_APPROVE,
     ),
     QueuePreset("all", "All alerts", filters={}),
 )

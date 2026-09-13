@@ -69,8 +69,17 @@ def new_id(prefix: str) -> str:
 # --------------------------------------------------------------------------
 
 
-def case_type_out(config: CaseTypeConfig, users: list[User]) -> CaseTypeOut:
+def case_type_out(
+    config: CaseTypeConfig, users: list[User], viewer: User
+) -> CaseTypeOut:
     data: dict[str, Any] = asdict(config)
+    role = Role(viewer.role)
+    data["presets"] = [
+        {k: v for k, v in p.items() if k != "requires_permission"}
+        for p in data["presets"]
+        if p["requires_permission"] is None
+        or has_permission(role, p["requires_permission"])
+    ]
     for f in data["filters"]:
         if f["key"] == "assignee_id":
             f["options"] = [{"value": u.id, "label": u.name} for u in users]
