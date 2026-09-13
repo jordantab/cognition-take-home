@@ -245,7 +245,6 @@ PRESETS = (
         filters={"status": "pending_approval"},
         default_for_roles=("compliance_manager",),
     ),
-    QueuePreset("high_risk", "High priority", filters={"priority": "high"}),
     QueuePreset("all", "All alerts", filters={}),
 )
 
