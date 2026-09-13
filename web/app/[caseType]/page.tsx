@@ -9,6 +9,7 @@ import { PageHeader } from "@/components/kit/page-header";
 import { TrendChart } from "@/components/kit/trend-chart";
 import { WorkQueue } from "@/components/kit/work-queue";
 import { can } from "@/components/kit/role-gate";
+import { defaultPreset, presetParams } from "@/lib/presets";
 import {
   ApiError,
   getCaseType,
@@ -41,16 +42,21 @@ export default async function QueuePage({
 
   const page = Number(pick(query, "page") ?? 1);
   const currentUser = await getCurrentUser();
+  // An untouched URL opens on the case type's default saved view.
+  const fallback = pick(query, "preset")
+    ? {}
+    : presetParams(defaultPreset(config.presets, currentUser.role));
+  const value = (key: string) => pick(query, key) ?? fallback[key];
   // `me` keeps "my work" views pinned to whoever is signed in, not to an id
   // captured when the view was clicked.
-  const assignee = pick(query, "assignee_id");
+  const assignee = value("assignee_id");
   const filters = {
-    status: pick(query, "status"),
+    status: value("status"),
     assignee_id: assignee === "me" ? currentUser.id : assignee,
-    priority: pick(query, "priority"),
-    typology: pick(query, "typology"),
+    priority: value("priority"),
+    typology: value("typology"),
     q: pick(query, "q"),
-    open_only: pick(query, "open_only"),
+    open_only: value("open_only"),
     sort: pick(query, "sort") ?? "due_at",
     direction: pick(query, "direction") ?? "asc",
   };
@@ -119,6 +125,7 @@ export default async function QueuePage({
               filters={config.filters}
               presets={config.presets}
               currentUserId={currentUser.id}
+              currentUserRole={currentUser.role}
             />
           </div>
           <WorkQueue

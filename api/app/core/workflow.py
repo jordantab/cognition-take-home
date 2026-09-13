@@ -96,6 +96,10 @@ class QueuePreset:
     label: str
     filters: dict[str, str] = field(default_factory=dict)
     mine: bool = False
+    default: bool = False  # the view the queue opens on
+    # Roles that open on this view instead of the default one, so an approver
+    # does not land on an empty personal queue.
+    default_for_roles: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)

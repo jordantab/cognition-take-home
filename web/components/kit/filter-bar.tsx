@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { defaultPreset, presetParams } from "@/lib/presets";
 import type { Filter, Preset } from "@/lib/types";
 
 import { useQueueParams } from "./use-queue-params";
@@ -27,15 +28,18 @@ export function FilterBar({
   filters,
   presets,
   currentUserId,
+  currentUserRole,
 }: {
   filters: Filter[];
   presets: Preset[];
   currentUserId: string;
+  currentUserRole: string;
 }) {
   const { params, setParams } = useQueueParams();
   const search = filters.find((filter) => filter.type === "search");
   const selects = filters.filter((filter) => filter.type !== "search");
-  const activePreset = params.get("preset") ?? "all";
+  const activePreset =
+    params.get("preset") ?? defaultPreset(presets, currentUserRole)?.key;
 
   const query = params.get("q") ?? "";
   const [term, setTerm] = useState(query);
@@ -54,11 +58,8 @@ export function FilterBar({
       assignee_id: null,
       open_only: null,
     };
-    for (const [key, value] of Object.entries(preset.filters)) next[key] = value;
-    if (preset.mine) {
-      // `me` rather than an id, so the view follows the persona switcher.
-      next.assignee_id = "me";
-      next.open_only = "true";
+    for (const [key, value] of Object.entries(presetParams(preset))) {
+      next[key] = value;
     }
     setParams(next, { reset: true });
   }

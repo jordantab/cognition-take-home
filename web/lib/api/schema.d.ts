@@ -550,6 +550,16 @@ export interface components {
             };
             /** Mine */
             mine: boolean;
+            /**
+             * Default
+             * @default false
+             */
+            default: boolean;
+            /**
+             * Default For Roles
+             * @default []
+             */
+            default_for_roles: string[];
         };
         /** ReasonCodeOut */
         ReasonCodeOut: {

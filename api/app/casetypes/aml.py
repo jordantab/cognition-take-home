@@ -237,15 +237,21 @@ EVIDENCE_TABS = (
 )
 
 PRESETS = (
-    QueuePreset("my_open", "My open alerts", mine=True),
+    QueuePreset("my_open", "My open alerts", mine=True, default=True),
     QueuePreset("unassigned", "Unassigned", filters={"assignee_id": "unassigned"}),
     QueuePreset(
         "pending_approval",
         "Awaiting my approval",
         filters={"status": "pending_approval"},
+        default_for_roles=("compliance_manager",),
     ),
     QueuePreset("high_risk", "High priority", filters={"priority": "high"}),
-    QueuePreset("all", "All alerts", filters={}),
+    QueuePreset(
+        "all",
+        "All alerts",
+        filters={},
+        default_for_roles=("admin", "ops_agent"),
+    ),
 )
 
 AML = register(

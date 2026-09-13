@@ -88,6 +88,8 @@ class PresetOut(BaseModel):
     label: str
     filters: dict[str, str]
     mine: bool
+    default: bool = False
+    default_for_roles: list[str] = []
 
 
 class CaseTypeOut(BaseModel):
