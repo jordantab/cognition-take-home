@@ -60,7 +60,6 @@ USERS = [
         "Financial Crime Analyst",
         "Financial Crime",
     ),
-    ("usr_dev", "Dev Raman", "analyst", "Financial Crime Analyst", "Financial Crime"),
     (
         "usr_priya",
         "Priya Nair",
@@ -75,8 +74,6 @@ USERS = [
         "Head of Compliance",
         "Compliance",
     ),
-    ("usr_sofia", "Sofia Lindqvist", "ops_agent", "Payment Operations", "Operations"),
-    ("usr_admin", "Rae Patel", "admin", "Platform Admin", "Engineering"),
 ]
 
 RULES = {
@@ -652,7 +649,7 @@ def seed() -> None:
                     case.closed_at = cursor
 
             for _ in range(rng.randint(0, 3)):
-                author = rng.choice(users[:4])
+                author = rng.choice(users)
                 comment_at = min(opened_at + timedelta(hours=rng.randint(1, 60)), now)
                 comments.append(
                     Comment(

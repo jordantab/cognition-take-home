@@ -246,12 +246,7 @@ PRESETS = (
         default_for_roles=("compliance_manager",),
     ),
     QueuePreset("high_risk", "High priority", filters={"priority": "high"}),
-    QueuePreset(
-        "all",
-        "All alerts",
-        filters={},
-        default_for_roles=("admin", "ops_agent"),
-    ),
+    QueuePreset("all", "All alerts", filters={}),
 )
 
 AML = register(
