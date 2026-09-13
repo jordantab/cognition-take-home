@@ -6,8 +6,8 @@
 
 /* The categorical tag palette is picked per case type at runtime, so keep the
    whole palette in the build rather than only the hues in the current app. */
-@source inline("{,dark:}bg-{slate,sky,violet,teal,amber,rose,indigo}-{50,100,400,500,800,900,950}");
-@source inline("{,dark:}text-{slate,sky,violet,teal,amber,rose,indigo}-{200,700,800,900}");
+@source inline("{,dark:}bg-{indigo,violet,fuchsia,pink,cyan,teal}-{100,500,950}");
+@source inline("{,dark:}text-{indigo,violet,fuchsia,pink,cyan,teal}-{200,800}");
 
 @theme inline {
   --color-background: var(--background);
