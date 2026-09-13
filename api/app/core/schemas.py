@@ -74,6 +74,7 @@ class SummaryFieldOut(BaseModel):
     key: str
     label: str
     type: str
+    tones: dict[str, str] = {}
 
 
 class EvidenceTabOut(BaseModel):

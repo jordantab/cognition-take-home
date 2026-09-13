@@ -134,7 +134,7 @@ def _headline(typology: str, flagged: list[Transaction], exposure: float) -> str
     if typology == "structuring":
         return (
             f"{count} cash deposits under $10k totalling {_usd(exposure)} "
-            f"over {span_days} days"
+            f"over {span_days} day{'s' if span_days != 1 else ''}"
         )
     if typology == "rapid_movement":
         inbound = next(t for t in flagged if t.direction == "credit")

@@ -224,7 +224,7 @@ SUMMARY_FIELDS = (
     SummaryField("subject_name", "Customer", type="text"),
     SummaryField("customer_risk_rating", "Customer risk", type="risk_rating"),
     SummaryField("rule_name", "Triggered rule", type="text"),
-    SummaryField("typology", "Typology", type="tag"),
+    SummaryField("typology", "Typology", type="tag", tones=TYPOLOGY_TONES),
     SummaryField("amount", "Exposure", type="money"),
     SummaryField("window_label", "Detection window", type="text"),
 )

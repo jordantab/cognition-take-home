@@ -74,7 +74,7 @@ def case_type_out(config: CaseTypeConfig, users: list[User]) -> CaseTypeOut:
     for f in data["filters"]:
         if f["key"] == "assignee_id":
             f["options"] = [{"value": u.id, "label": u.name} for u in users]
-    for c in data["columns"]:
+    for c in (*data["columns"], *data["summary_fields"]):
         c["tones"] = dict(c.get("tones") or ())
     for t in data["transitions"]:
         t.pop("from_states", None)

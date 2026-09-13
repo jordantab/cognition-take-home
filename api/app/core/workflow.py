@@ -80,6 +80,7 @@ class SummaryField:
     key: str
     label: str
     type: str = "text"
+    tones: tuple[tuple[str, str], ...] = ()
 
 
 @dataclass(frozen=True)

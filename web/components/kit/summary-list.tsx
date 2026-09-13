@@ -50,6 +50,7 @@ function SummaryValue({
       return (
         <TagBadge
           label={String(caseRow.extra?.[`${field.key}_label`] ?? raw ?? "—")}
+          color={field.tones?.[String(raw ?? "")]}
         />
       );
     case "risk_rating":

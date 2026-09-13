@@ -597,6 +597,13 @@ export interface components {
             label: string;
             /** Type */
             type: string;
+            /**
+             * Tones
+             * @default {}
+             */
+            tones: {
+                [key: string]: string;
+            };
         };
         /** TransactionOut */
         TransactionOut: {
