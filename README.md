@@ -7,9 +7,8 @@ analysts triage, investigate against seeded evidence, and either close or escala
 decision. It is one app — a Next.js frontend, a FastAPI backend, and a seeded SQLite database —
 running entirely locally with no external services.
 
-Devin was the primary building tool for this repository. The stack, data model, workflow
-configuration, UI components and seed data were built through Devin sessions, with review and
-direction from a human.
+Devin was the primary building tool: the stack, data model, workflow configuration, UI components
+and seed data were all built through Devin sessions, with human review and direction.
 
 ## What it demonstrates
 
@@ -19,14 +18,12 @@ direction from a human.
 - Case-management components and patterns that are not specific to AML: the queue, filter bar,
   metric tiles, trend chart, case shell, decision panel, audit timeline, comment thread, assignee
   picker, badges and SLA clock all render from declarations the API returns
-  (`api/app/casetypes/aml.py`). Only four components — the AML evidence tabs — know what an AML
-  alert is.
-- Those shared components are candidates for extraction into an internal-tools kit that other apps
-  could depend on. In a production setup each internal app would live in its own repository and
-  consume that kit as a package, rather than being added here.
-- `/platform` lists the components built in this prototype, marks each as shared or AML-specific
-  with its line count, and shows the AML case-type declaration in full. The percentage it reports
-  covers only the components in that list, not the whole codebase.
+  (`api/app/casetypes/aml.py`). Only the four evidence tabs know what an AML alert is.
+- Those shared components are candidates for extraction into an internal-tools kit. In a production
+  setup each internal app would live in its own repository and consume that kit as a package.
+- `/platform` lists the components built here, marks each as shared or AML-specific with its line
+  count, and shows the AML case-type declaration in full. The percentage it reports covers only the
+  components in that list, not the whole codebase.
 
 ## Architecture
 
@@ -68,19 +65,18 @@ make dev
 
 1. As Amelia (analyst), open an alert from "My open alerts" and review the flagged transactions,
    customer profile, screening hits and related alerts.
-2. Claim and start the review, then either close it with a reason code or recommend a SAR with a
-   reason code and rationale.
-3. Switch to Marcus (compliance manager) in the sidebar. The recommended alert appears under
-   "Awaiting my approval", a view analysts do not see.
+2. Claim the alert, then either close it with a reason code or recommend a SAR with a reason code
+   and rationale.
+3. Switch to Marcus (compliance manager) in the sidebar. The alert appears under "Awaiting my
+   approval", a view analysts do not see.
 4. Approve and file the SAR. Four-eyes is enforced server-side: the analyst who recommended it
    cannot approve it, and the button stays locked with the reason shown.
-5. Check the audit history on the case — workflow changes, assignments and comments are all
-   recorded.
+5. Check the audit history — workflow changes, assignments and comments are all recorded.
 
 ## Prototype limitations
 
 - This is a prototype, not a production-ready AML or compliance system.
-- Authentication is mocked. There is no login, session security or tenancy.
+- Authentication is mocked: no login, session security or tenancy.
 - There is no detection engine. Suspicious patterns are written by the seed script, which also
   generates the summary text for each alert.
 - "Approve & file SAR" only advances the demo workflow. It does not submit a regulatory report
