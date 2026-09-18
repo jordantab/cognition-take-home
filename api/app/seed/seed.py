@@ -7,6 +7,9 @@ transactions, alerts and audit trails, so demos and screenshots are stable.
 from __future__ import annotations
 
 import random
+from collections import Counter
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
 from datetime import UTC, datetime, timedelta
 
 from faker import Faker
@@ -24,7 +27,6 @@ from app.core.models import (
     User,
     WatchlistHit,
 )
-from app.core.service import new_id
 from app.db import create_db_and_tables, engine
 from app.settings import SEED
 
@@ -172,6 +174,17 @@ def _pick(rng: random.Random, weights: list[tuple[str, int]]) -> str:
     return rng.choices(population, weights=weight_values, k=1)[0]
 
 
+def id_factory() -> Callable[[str], str]:
+    """Sequential ids per prefix, so a re-run reproduces the dataset exactly."""
+    counters: Counter[str] = Counter()
+
+    def make(prefix: str) -> str:
+        counters[prefix] += 1
+        return f"{prefix}_{counters[prefix]:06d}"
+
+    return make
+
+
 def wipe(session: Session) -> None:
     for model in (
         CaseEvent,
@@ -187,14 +200,29 @@ def wipe(session: Session) -> None:
     session.commit()
 
 
-def seed() -> None:
+@contextmanager
+def _session_scope(session: Session | None) -> Iterator[Session]:
+    if session is not None:
+        yield session
+        return
+    create_db_and_tables()
+    with Session(engine) as owned:
+        yield owned
+
+
+def seed(
+    session: Session | None = None,
+    *,
+    now: datetime | None = None,
+    quiet: bool = False,
+) -> None:
     rng = random.Random(SEED)
     Faker.seed(SEED)
-    create_db_and_tables()
-    now = datetime.now(UTC).replace(tzinfo=None, microsecond=0)
+    sid = id_factory()
+    now = now or datetime.now(UTC).replace(tzinfo=None, microsecond=0)
 
-    with Session(engine) as session:
-        wipe(session)
+    with _session_scope(session) as db:
+        wipe(db)
 
         users = [
             User(
@@ -207,7 +235,7 @@ def seed() -> None:
             )
             for uid, name, role, title, team in USERS
         ]
-        session.add_all(users)
+        db.add_all(users)
 
         analysts = [u for u in users if u.role in {"analyst", "senior_analyst"}]
         managers = [u for u in users if u.role in {"compliance_manager", "admin"}]
@@ -221,7 +249,7 @@ def seed() -> None:
             name = fake.company() if is_business else fake.name()
             risk_rating = _pick(rng, [("low", 55), ("medium", 32), ("high", 13)])
             customer = Customer(
-                id=new_id("cus"),
+                id=sid("cus"),
                 name=name,
                 kind="business" if is_business else "individual",
                 country=rng.choice(HOME_COUNTRIES),
@@ -242,7 +270,7 @@ def seed() -> None:
 
             for _ in range(rng.randint(1, 2)):
                 account = Account(
-                    id=new_id("acc"),
+                    id=sid("acc"),
                     customer_id=customer.id,
                     number=f"****{rng.randint(1000, 9999)}",
                     kind="business_checking" if is_business else "personal_checking",
@@ -258,7 +286,7 @@ def seed() -> None:
                     direction = _pick(rng, [("credit", 55), ("debit", 45)])
                     transactions.append(
                         Transaction(
-                            id=new_id("txn"),
+                            id=sid("txn"),
                             account_id=account.id,
                             customer_id=customer.id,
                             posted_at=now
@@ -295,8 +323,8 @@ def seed() -> None:
                         )
                     )
 
-        session.add_all(customers)
-        session.add_all(accounts)
+        db.add_all(customers)
+        db.add_all(accounts)
 
         accounts_by_customer: dict[str, list[Account]] = {}
         for account in accounts:
@@ -350,7 +378,7 @@ def seed() -> None:
                 for i in range(count):
                     flagged.append(
                         Transaction(
-                            id=new_id("txn"),
+                            id=sid("txn"),
                             account_id=account.id,
                             customer_id=customer.id,
                             posted_at=window_start + timedelta(hours=8 * i),
@@ -368,7 +396,7 @@ def seed() -> None:
                 inbound = round(rng.uniform(80_000, 420_000), 2)
                 flagged.append(
                     Transaction(
-                        id=new_id("txn"),
+                        id=sid("txn"),
                         account_id=account.id,
                         customer_id=customer.id,
                         posted_at=window_start,
@@ -388,7 +416,7 @@ def seed() -> None:
                     remaining -= amount
                     flagged.append(
                         Transaction(
-                            id=new_id("txn"),
+                            id=sid("txn"),
                             account_id=account.id,
                             customer_id=customer.id,
                             posted_at=window_start + timedelta(hours=6 + 5 * i),
@@ -406,7 +434,7 @@ def seed() -> None:
                 for i in range(rng.randint(2, 4)):
                     flagged.append(
                         Transaction(
-                            id=new_id("txn"),
+                            id=sid("txn"),
                             account_id=account.id,
                             customer_id=customer.id,
                             posted_at=window_start + timedelta(days=i),
@@ -424,7 +452,7 @@ def seed() -> None:
                 matched = rng.choice(SANCTIONS_NAMES)
                 flagged.append(
                     Transaction(
-                        id=new_id("txn"),
+                        id=sid("txn"),
                         account_id=account.id,
                         customer_id=customer.id,
                         posted_at=window_start,
@@ -440,7 +468,7 @@ def seed() -> None:
                 )
                 hits.append(
                     WatchlistHit(
-                        id=new_id("hit"),
+                        id=sid("hit"),
                         customer_id=customer.id,
                         list_name=rng.choice(
                             ["OFAC SDN", "EU Consolidated", "UN Sanctions"]
@@ -456,7 +484,7 @@ def seed() -> None:
                 for i in range(rng.randint(2, 3)):
                     flagged.append(
                         Transaction(
-                            id=new_id("txn"),
+                            id=sid("txn"),
                             account_id=account.id,
                             customer_id=customer.id,
                             posted_at=window_start + timedelta(days=i),
@@ -474,7 +502,7 @@ def seed() -> None:
                 for i in range(rng.randint(3, 5)):
                     flagged.append(
                         Transaction(
-                            id=new_id("txn"),
+                            id=sid("txn"),
                             account_id=account.id,
                             customer_id=customer.id,
                             posted_at=window_start
@@ -515,7 +543,7 @@ def seed() -> None:
             due_at = opened_at + timedelta(hours=sla_hours)
 
             case = Case(
-                id=new_id("case"),
+                id=sid("case"),
                 case_type="aml",
                 reference=f"AML-{2400 + index}",
                 title=_headline(typology, flagged, exposure),
@@ -544,7 +572,7 @@ def seed() -> None:
 
             events.append(
                 CaseEvent(
-                    id=new_id("evt"),
+                    id=sid("evt"),
                     case_id=case.id,
                     actor_id=None,
                     kind="created",
@@ -563,7 +591,7 @@ def seed() -> None:
                 case.assignee_id = analyst.id
                 events.append(
                     CaseEvent(
-                        id=new_id("evt"),
+                        id=sid("evt"),
                         case_id=case.id,
                         actor_id=analyst.id,
                         kind="transition",
@@ -579,7 +607,7 @@ def seed() -> None:
                 cursor = min(cursor + timedelta(hours=rng.randint(2, 26)), now)
                 events.append(
                     CaseEvent(
-                        id=new_id("evt"),
+                        id=sid("evt"),
                         case_id=case.id,
                         actor_id=analyst.id,
                         kind="transition",
@@ -596,7 +624,7 @@ def seed() -> None:
                 reason = rng.choice(CLOSE_REASONS)
                 events.append(
                     CaseEvent(
-                        id=new_id("evt"),
+                        id=sid("evt"),
                         case_id=case.id,
                         actor_id=analyst.id,
                         kind="transition",
@@ -614,7 +642,7 @@ def seed() -> None:
                 cursor = min(cursor + timedelta(hours=rng.randint(4, 36)), now)
                 events.append(
                     CaseEvent(
-                        id=new_id("evt"),
+                        id=sid("evt"),
                         case_id=case.id,
                         actor_id=analyst.id,
                         kind="transition",
@@ -632,7 +660,7 @@ def seed() -> None:
                     cursor = min(cursor + timedelta(hours=rng.randint(2, 30)), now)
                     events.append(
                         CaseEvent(
-                            id=new_id("evt"),
+                            id=sid("evt"),
                             case_id=case.id,
                             actor_id=manager.id,
                             kind="transition",
@@ -653,7 +681,7 @@ def seed() -> None:
                 comment_at = min(opened_at + timedelta(hours=rng.randint(1, 60)), now)
                 comments.append(
                     Comment(
-                        id=new_id("cmt"),
+                        id=sid("cmt"),
                         case_id=case.id,
                         author_id=author.id,
                         body=rng.choice(COMMENT_BODIES),
@@ -667,7 +695,7 @@ def seed() -> None:
         for customer in rng.sample(customers, 18):
             hits.append(
                 WatchlistHit(
-                    id=new_id("hit"),
+                    id=sid("hit"),
                     customer_id=customer.id,
                     list_name=rng.choice(
                         ["Adverse Media", "PEP Register", "Internal Blocklist"]
@@ -680,18 +708,19 @@ def seed() -> None:
                 )
             )
 
-        session.add_all(transactions)
-        session.add_all(cases)
-        session.add_all(events)
-        session.add_all(comments)
-        session.add_all(hits)
-        session.commit()
+        db.add_all(transactions)
+        db.add_all(cases)
+        db.add_all(events)
+        db.add_all(comments)
+        db.add_all(hits)
+        db.commit()
 
-        print(
-            f"Seeded {len(users)} users, {len(customers)} customers, "
-            f"{len(accounts)} accounts, {len(transactions)} transactions, "
-            f"{len(cases)} AML alerts, {len(events)} audit events."
-        )
+        if not quiet:
+            print(
+                f"Seeded {len(users)} users, {len(customers)} customers, "
+                f"{len(accounts)} accounts, {len(transactions)} transactions, "
+                f"{len(cases)} AML alerts, {len(events)} audit events."
+            )
 
 
 if __name__ == "__main__":

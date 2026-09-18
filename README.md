@@ -82,7 +82,27 @@ make dev
 - "Approve & file SAR" only advances the demo workflow. It does not submit a regulatory report
   anywhere.
 - Audit history covers workflow transitions, assignments and comments only.
-- There are no automated tests. Verification is `make lint`, `make typecheck` and `make build`.
+- Test coverage is backend-weighted: the workflow engine, RBAC, audit trail, queue, metrics and
+  seed are covered by pytest, the frontend by one Playwright golden path only.
 - Data lives in a local SQLite file and is replaced whenever the seed is re-run.
+
+## Checks
+
+```bash
+make test          # pytest: workflow, RBAC, audit trail, queue, metrics, seed determinism
+make e2e           # Playwright golden path (once: cd web && npx playwright install --with-deps chromium)
+make schema-check  # regenerate web/lib/api/* from app.openapi() and fail on drift
+make check         # lint + typecheck + test + schema-check + build, as CI runs them
+```
+
+The API tests run against a per-test in-memory SQLite database, so they need no seeded fixture and
+never touch `api/data/app.db`. They are driven by the case-type declarations rather than hard-coded
+AML knowledge: `api/tests/test_case_type_declarations.py` runs over every registered case type, so a
+new app is validated by it for free.
+
+After changing a response model, run `make schema` and commit the regenerated
+`web/lib/api/openapi.json` and `web/lib/api/schema.d.ts`.
+
+Optional local hooks: `pip install pre-commit && pre-commit install` (ruff + eslint).
 
 See [PLAN.md](PLAN.md) for the original design notes.

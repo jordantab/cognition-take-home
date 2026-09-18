@@ -32,10 +32,18 @@ That is the whole app. Routes (`/<caseType>`, `/<caseType>/<caseId>`), queue, fi
 ## Checks
 
 ```bash
-make lint        # ruff + eslint
-make typecheck   # tsc --noEmit
-make build       # next build
-make seed        # rebuild the SQLite fixture
+make lint          # ruff + eslint
+make typecheck     # tsc --noEmit
+make build         # next build
+make test          # pytest (api/tests)
+make schema-check  # regenerate web/lib/api/* from OpenAPI and fail on drift
+make check         # all of the above, as CI runs them
+make e2e           # Playwright golden path (reseeds the fixture)
+make seed          # rebuild the SQLite fixture
 ```
+
+New workflow behaviour belongs in `api/tests/`. Assertions come from the case-type declaration
+(iterate `config.transitions`, `all_case_types()`), never from a hard-coded list of AML states, so
+the suites keep covering the platform as apps are added.
 
 When adding a block to `components/kit/`, also add it to `web/lib/blocks.ts` so the `/platform` gallery stays accurate.
