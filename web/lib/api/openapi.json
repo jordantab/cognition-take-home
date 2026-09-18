@@ -1,0 +1,2189 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Internal Tools Platform API",
+    "description": "A generic case-management engine. Internal tools are declared as case types on top of it rather than built from scratch.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/users": {
+      "get": {
+        "tags": [
+          "identity"
+        ],
+        "summary": "Read Users",
+        "operationId": "read_users_api_users_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/UserOut"
+                  },
+                  "type": "array",
+                  "title": "Response Read Users Api Users Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/me": {
+      "get": {
+        "tags": [
+          "identity"
+        ],
+        "summary": "Read Me",
+        "operationId": "read_me_api_me_get",
+        "parameters": [
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/case-types": {
+      "get": {
+        "tags": [
+          "cases"
+        ],
+        "summary": "Read Case Types",
+        "operationId": "read_case_types_api_case_types_get",
+        "parameters": [
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CaseTypeOut"
+                  },
+                  "title": "Response Read Case Types Api Case Types Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/case-types/{case_type}": {
+      "get": {
+        "tags": [
+          "cases"
+        ],
+        "summary": "Read Case Type",
+        "operationId": "read_case_type_api_case_types__case_type__get",
+        "parameters": [
+          {
+            "name": "case_type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Type"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaseTypeOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/case-types/{case_type}/cases": {
+      "get": {
+        "tags": [
+          "cases"
+        ],
+        "summary": "Read Cases",
+        "operationId": "read_cases_api_case_types__case_type__cases_get",
+        "parameters": [
+          {
+            "name": "case_type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Type"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "assignee_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Assignee Id"
+            }
+          },
+          {
+            "name": "priority",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Priority"
+            }
+          },
+          {
+            "name": "typology",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Typology"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "name": "open_only",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Open Only"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "due_at",
+              "title": "Sort"
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "asc",
+              "title": "Direction"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 25,
+              "title": "Page Size"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaseListOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/case-types/{case_type}/metrics": {
+      "get": {
+        "tags": [
+          "cases"
+        ],
+        "summary": "Read Metrics",
+        "operationId": "read_metrics_api_case_types__case_type__metrics_get",
+        "parameters": [
+          {
+            "name": "case_type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Type"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricsOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cases/{case_id}": {
+      "get": {
+        "tags": [
+          "cases"
+        ],
+        "summary": "Read Case",
+        "operationId": "read_case_api_cases__case_id__get",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaseDetailOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cases/{case_id}/transition": {
+      "post": {
+        "tags": [
+          "cases"
+        ],
+        "summary": "Post Transition",
+        "operationId": "post_transition_api_cases__case_id__transition_post",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransitionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaseDetailOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cases/{case_id}/comments": {
+      "post": {
+        "tags": [
+          "cases"
+        ],
+        "summary": "Post Comment",
+        "operationId": "post_comment_api_cases__case_id__comments_post",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cases/{case_id}/assignee": {
+      "post": {
+        "tags": [
+          "cases"
+        ],
+        "summary": "Post Assignee",
+        "operationId": "post_assignee_api_cases__case_id__assignee_post",
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaseDetailOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Health Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccountOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "number": {
+            "type": "string",
+            "title": "Number"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency"
+          },
+          "balance": {
+            "type": "number",
+            "title": "Balance"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Opened At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "number",
+          "kind",
+          "currency",
+          "balance",
+          "status",
+          "opened_at"
+        ],
+        "title": "AccountOut"
+      },
+      "AssignRequest": {
+        "properties": {
+          "assignee_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assignee Id"
+          }
+        },
+        "type": "object",
+        "title": "AssignRequest"
+      },
+      "AvailableTransitionOut": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "to_state": {
+            "type": "string",
+            "title": "To State"
+          },
+          "variant": {
+            "type": "string",
+            "title": "Variant"
+          },
+          "requires_note": {
+            "type": "boolean",
+            "title": "Requires Note"
+          },
+          "requires_reason_code": {
+            "type": "boolean",
+            "title": "Requires Reason Code"
+          },
+          "reason_codes": {
+            "items": {
+              "$ref": "#/components/schemas/ReasonCodeOut"
+            },
+            "type": "array",
+            "title": "Reason Codes"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          },
+          "disabled_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Disabled Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "to_state",
+          "variant",
+          "requires_note",
+          "requires_reason_code",
+          "reason_codes",
+          "description",
+          "enabled"
+        ],
+        "title": "AvailableTransitionOut"
+      },
+      "BreakdownItemOut": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "value": {
+            "type": "integer",
+            "title": "Value"
+          },
+          "tone": {
+            "type": "string",
+            "title": "Tone",
+            "default": "neutral"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "value"
+        ],
+        "title": "BreakdownItemOut"
+      },
+      "CaseDetailOut": {
+        "properties": {
+          "case": {
+            "$ref": "#/components/schemas/CaseRowOut"
+          },
+          "subject": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CustomerOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "accounts": {
+            "items": {
+              "$ref": "#/components/schemas/AccountOut"
+            },
+            "type": "array",
+            "title": "Accounts"
+          },
+          "transactions": {
+            "items": {
+              "$ref": "#/components/schemas/TransactionOut"
+            },
+            "type": "array",
+            "title": "Transactions"
+          },
+          "watchlist_hits": {
+            "items": {
+              "$ref": "#/components/schemas/WatchlistHitOut"
+            },
+            "type": "array",
+            "title": "Watchlist Hits"
+          },
+          "related_cases": {
+            "items": {
+              "$ref": "#/components/schemas/RelatedCaseOut"
+            },
+            "type": "array",
+            "title": "Related Cases"
+          },
+          "events": {
+            "items": {
+              "$ref": "#/components/schemas/CaseEventOut"
+            },
+            "type": "array",
+            "title": "Events"
+          },
+          "comments": {
+            "items": {
+              "$ref": "#/components/schemas/CommentOut"
+            },
+            "type": "array",
+            "title": "Comments"
+          },
+          "available_transitions": {
+            "items": {
+              "$ref": "#/components/schemas/AvailableTransitionOut"
+            },
+            "type": "array",
+            "title": "Available Transitions"
+          },
+          "can_comment": {
+            "type": "boolean",
+            "title": "Can Comment"
+          },
+          "can_assign_others": {
+            "type": "boolean",
+            "title": "Can Assign Others"
+          },
+          "can_claim": {
+            "type": "boolean",
+            "title": "Can Claim"
+          }
+        },
+        "type": "object",
+        "required": [
+          "case",
+          "subject",
+          "accounts",
+          "transactions",
+          "watchlist_hits",
+          "related_cases",
+          "events",
+          "comments",
+          "available_transitions",
+          "can_comment",
+          "can_assign_others",
+          "can_claim"
+        ],
+        "title": "CaseDetailOut"
+      },
+      "CaseEventOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "actor": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/UserOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "transition_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transition Key"
+          },
+          "transition_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transition Label"
+          },
+          "from_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "From Status"
+          },
+          "to_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "To Status"
+          },
+          "reason_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason Code"
+          },
+          "reason_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason Label"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "meta": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Meta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "actor",
+          "transition_key",
+          "transition_label",
+          "from_status",
+          "to_status",
+          "reason_code",
+          "reason_label",
+          "note",
+          "created_at",
+          "meta"
+        ],
+        "title": "CaseEventOut"
+      },
+      "CaseListOut": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CaseRowOut"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "page": {
+            "type": "integer",
+            "title": "Page"
+          },
+          "page_size": {
+            "type": "integer",
+            "title": "Page Size"
+          },
+          "status_counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Status Counts"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "page",
+          "page_size",
+          "status_counts"
+        ],
+        "title": "CaseListOut"
+      },
+      "CaseRowOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "case_type": {
+            "type": "string",
+            "title": "Case Type"
+          },
+          "reference": {
+            "type": "string",
+            "title": "Reference"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "priority": {
+            "type": "string",
+            "title": "Priority"
+          },
+          "risk_score": {
+            "type": "integer",
+            "title": "Risk Score"
+          },
+          "amount": {
+            "type": "number",
+            "title": "Amount"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency"
+          },
+          "subject_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subject Id"
+          },
+          "subject_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subject Name"
+          },
+          "assignee": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/UserOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Opened At"
+          },
+          "due_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Due At"
+          },
+          "closed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Closed At"
+          },
+          "overdue": {
+            "type": "boolean",
+            "title": "Overdue"
+          },
+          "hours_remaining": {
+            "type": "number",
+            "title": "Hours Remaining"
+          },
+          "extra": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Extra"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "case_type",
+          "reference",
+          "title",
+          "status",
+          "priority",
+          "risk_score",
+          "amount",
+          "currency",
+          "subject_id",
+          "subject_name",
+          "assignee",
+          "opened_at",
+          "due_at",
+          "closed_at",
+          "overdue",
+          "hours_remaining",
+          "extra"
+        ],
+        "title": "CaseRowOut"
+      },
+      "CaseTypeOut": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "plural_label": {
+            "type": "string",
+            "title": "Plural Label"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "icon": {
+            "type": "string",
+            "title": "Icon"
+          },
+          "reference_prefix": {
+            "type": "string",
+            "title": "Reference Prefix"
+          },
+          "sla_hours": {
+            "type": "integer",
+            "title": "Sla Hours"
+          },
+          "states": {
+            "items": {
+              "$ref": "#/components/schemas/StateOut"
+            },
+            "type": "array",
+            "title": "States"
+          },
+          "transitions": {
+            "items": {
+              "$ref": "#/components/schemas/TransitionOut"
+            },
+            "type": "array",
+            "title": "Transitions"
+          },
+          "columns": {
+            "items": {
+              "$ref": "#/components/schemas/ColumnOut"
+            },
+            "type": "array",
+            "title": "Columns"
+          },
+          "filters": {
+            "items": {
+              "$ref": "#/components/schemas/FilterOut"
+            },
+            "type": "array",
+            "title": "Filters"
+          },
+          "summary_fields": {
+            "items": {
+              "$ref": "#/components/schemas/SummaryFieldOut"
+            },
+            "type": "array",
+            "title": "Summary Fields"
+          },
+          "evidence_tabs": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceTabOut"
+            },
+            "type": "array",
+            "title": "Evidence Tabs"
+          },
+          "presets": {
+            "items": {
+              "$ref": "#/components/schemas/PresetOut"
+            },
+            "type": "array",
+            "title": "Presets"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "plural_label",
+          "description",
+          "icon",
+          "reference_prefix",
+          "sla_hours",
+          "states",
+          "transitions",
+          "columns",
+          "filters",
+          "summary_fields",
+          "evidence_tabs",
+          "presets"
+        ],
+        "title": "CaseTypeOut"
+      },
+      "ColumnOut": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "sortable": {
+            "type": "boolean",
+            "title": "Sortable"
+          },
+          "width": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Width"
+          },
+          "primary": {
+            "type": "boolean",
+            "title": "Primary"
+          },
+          "tones": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Tones",
+            "default": {}
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "type",
+          "sortable",
+          "width",
+          "primary"
+        ],
+        "title": "ColumnOut"
+      },
+      "CommentOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "author": {
+            "$ref": "#/components/schemas/UserOut"
+          },
+          "body": {
+            "type": "string",
+            "title": "Body"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "author",
+          "body",
+          "created_at"
+        ],
+        "title": "CommentOut"
+      },
+      "CommentRequest": {
+        "properties": {
+          "body": {
+            "type": "string",
+            "title": "Body"
+          }
+        },
+        "type": "object",
+        "required": [
+          "body"
+        ],
+        "title": "CommentRequest"
+      },
+      "CustomerOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "country": {
+            "type": "string",
+            "title": "Country"
+          },
+          "segment": {
+            "type": "string",
+            "title": "Segment"
+          },
+          "risk_rating": {
+            "type": "string",
+            "title": "Risk Rating"
+          },
+          "kyc_status": {
+            "type": "string",
+            "title": "Kyc Status"
+          },
+          "is_pep": {
+            "type": "boolean",
+            "title": "Is Pep"
+          },
+          "occupation": {
+            "type": "string",
+            "title": "Occupation"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "onboarded_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Onboarded At"
+          },
+          "lifetime_volume": {
+            "type": "number",
+            "title": "Lifetime Volume"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "country",
+          "segment",
+          "risk_rating",
+          "kyc_status",
+          "is_pep",
+          "occupation",
+          "email",
+          "onboarded_at",
+          "lifetime_volume"
+        ],
+        "title": "CustomerOut"
+      },
+      "EvidenceTabOut": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "component": {
+            "type": "string",
+            "title": "Component"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "component"
+        ],
+        "title": "EvidenceTabOut"
+      },
+      "FilterOptionOut": {
+        "properties": {
+          "value": {
+            "type": "string",
+            "title": "Value"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          }
+        },
+        "type": "object",
+        "required": [
+          "value",
+          "label"
+        ],
+        "title": "FilterOptionOut"
+      },
+      "FilterOut": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "options": {
+            "items": {
+              "$ref": "#/components/schemas/FilterOptionOut"
+            },
+            "type": "array",
+            "title": "Options"
+          },
+          "placeholder": {
+            "type": "string",
+            "title": "Placeholder"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "type",
+          "options",
+          "placeholder"
+        ],
+        "title": "FilterOut"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "MetricTileOut": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "value": {
+            "type": "number",
+            "title": "Value"
+          },
+          "format": {
+            "type": "string",
+            "title": "Format"
+          },
+          "hint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hint"
+          },
+          "tone": {
+            "type": "string",
+            "title": "Tone",
+            "default": "neutral"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "value",
+          "format"
+        ],
+        "title": "MetricTileOut"
+      },
+      "MetricsOut": {
+        "properties": {
+          "tiles": {
+            "items": {
+              "$ref": "#/components/schemas/MetricTileOut"
+            },
+            "type": "array",
+            "title": "Tiles"
+          },
+          "by_status": {
+            "items": {
+              "$ref": "#/components/schemas/BreakdownItemOut"
+            },
+            "type": "array",
+            "title": "By Status"
+          },
+          "by_typology": {
+            "items": {
+              "$ref": "#/components/schemas/BreakdownItemOut"
+            },
+            "type": "array",
+            "title": "By Typology"
+          },
+          "trend": {
+            "items": {
+              "$ref": "#/components/schemas/TrendPointOut"
+            },
+            "type": "array",
+            "title": "Trend"
+          }
+        },
+        "type": "object",
+        "required": [
+          "tiles",
+          "by_status",
+          "by_typology",
+          "trend"
+        ],
+        "title": "MetricsOut"
+      },
+      "PresetOut": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "filters": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Filters"
+          },
+          "mine": {
+            "type": "boolean",
+            "title": "Mine"
+          },
+          "default": {
+            "type": "boolean",
+            "title": "Default",
+            "default": false
+          },
+          "default_for_roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Default For Roles",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "filters",
+          "mine"
+        ],
+        "title": "PresetOut"
+      },
+      "ReasonCodeOut": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label"
+        ],
+        "title": "ReasonCodeOut"
+      },
+      "RelatedCaseOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "reference": {
+            "type": "string",
+            "title": "Reference"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Opened At"
+          },
+          "risk_score": {
+            "type": "integer",
+            "title": "Risk Score"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "reference",
+          "title",
+          "status",
+          "opened_at",
+          "risk_score"
+        ],
+        "title": "RelatedCaseOut"
+      },
+      "StateOut": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "tone": {
+            "type": "string",
+            "title": "Tone"
+          },
+          "terminal": {
+            "type": "boolean",
+            "title": "Terminal"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "tone",
+          "terminal",
+          "description"
+        ],
+        "title": "StateOut"
+      },
+      "SummaryFieldOut": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "tones": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Tones",
+            "default": {}
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "type"
+        ],
+        "title": "SummaryFieldOut"
+      },
+      "TransactionOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "account_id": {
+            "type": "string",
+            "title": "Account Id"
+          },
+          "posted_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Posted At"
+          },
+          "amount": {
+            "type": "number",
+            "title": "Amount"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency"
+          },
+          "direction": {
+            "type": "string",
+            "title": "Direction"
+          },
+          "channel": {
+            "type": "string",
+            "title": "Channel"
+          },
+          "counterparty_name": {
+            "type": "string",
+            "title": "Counterparty Name"
+          },
+          "counterparty_country": {
+            "type": "string",
+            "title": "Counterparty Country"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "is_flagged": {
+            "type": "boolean",
+            "title": "Is Flagged"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "account_id",
+          "posted_at",
+          "amount",
+          "currency",
+          "direction",
+          "channel",
+          "counterparty_name",
+          "counterparty_country",
+          "description",
+          "is_flagged"
+        ],
+        "title": "TransactionOut"
+      },
+      "TransitionOut": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "to_state": {
+            "type": "string",
+            "title": "To State"
+          },
+          "variant": {
+            "type": "string",
+            "title": "Variant"
+          },
+          "requires_note": {
+            "type": "boolean",
+            "title": "Requires Note"
+          },
+          "requires_reason_code": {
+            "type": "boolean",
+            "title": "Requires Reason Code"
+          },
+          "reason_codes": {
+            "items": {
+              "$ref": "#/components/schemas/ReasonCodeOut"
+            },
+            "type": "array",
+            "title": "Reason Codes"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "to_state",
+          "variant",
+          "requires_note",
+          "requires_reason_code",
+          "reason_codes",
+          "description"
+        ],
+        "title": "TransitionOut"
+      },
+      "TransitionRequest": {
+        "properties": {
+          "transition": {
+            "type": "string",
+            "title": "Transition"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "reason_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "transition"
+        ],
+        "title": "TransitionRequest"
+      },
+      "TrendPointOut": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "title": "Date"
+          },
+          "opened": {
+            "type": "integer",
+            "title": "Opened"
+          },
+          "closed": {
+            "type": "integer",
+            "title": "Closed"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "opened",
+          "closed"
+        ],
+        "title": "TrendPointOut"
+      },
+      "UserOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "role_label": {
+            "type": "string",
+            "title": "Role Label"
+          },
+          "job_title": {
+            "type": "string",
+            "title": "Job Title"
+          },
+          "team": {
+            "type": "string",
+            "title": "Team"
+          },
+          "initials": {
+            "type": "string",
+            "title": "Initials"
+          },
+          "permissions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Permissions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "email",
+          "role",
+          "role_label",
+          "job_title",
+          "team",
+          "initials",
+          "permissions"
+        ],
+        "title": "UserOut"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "WatchlistHitOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "list_name": {
+            "type": "string",
+            "title": "List Name"
+          },
+          "matched_name": {
+            "type": "string",
+            "title": "Matched Name"
+          },
+          "match_score": {
+            "type": "integer",
+            "title": "Match Score"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "details": {
+            "type": "string",
+            "title": "Details"
+          },
+          "screened_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Screened At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "list_name",
+          "matched_name",
+          "match_score",
+          "status",
+          "details",
+          "screened_at"
+        ],
+        "title": "WatchlistHitOut"
+      }
+    }
+  }
+}

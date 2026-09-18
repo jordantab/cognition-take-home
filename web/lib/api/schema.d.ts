@@ -797,7 +797,9 @@ export interface operations {
     read_case_types_api_case_types_get: {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                "x-user-id"?: string | null;
+            };
             path?: never;
             cookie?: never;
         };
@@ -812,12 +814,23 @@ export interface operations {
                     "application/json": components["schemas"]["CaseTypeOut"][];
                 };
             };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
     };
     read_case_type_api_case_types__case_type__get: {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                "x-user-id"?: string | null;
+            };
             path: {
                 case_type: string;
             };

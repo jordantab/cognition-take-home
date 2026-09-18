@@ -1,0 +1,2 @@
+# Keeps `app` classified as first-party no matter which directory ruff runs from.
+src = ["."]
